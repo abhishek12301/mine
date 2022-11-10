@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'sign_in.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'home.dart';
 
 
 class LoginForm extends StatefulWidget {
@@ -16,8 +17,6 @@ class _LoginFormState extends State<LoginForm> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey <FormState>formkey= GlobalKey<FormState>();
-
-
 
 
 
@@ -55,7 +54,7 @@ class _LoginFormState extends State<LoginForm> {
                           controller: nameController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "User Name"
+                              labelText: "Email"
                           ),
                           validator:  MultiValidator([
                             RequiredValidator(errorText:"Required"),
@@ -95,7 +94,15 @@ class _LoginFormState extends State<LoginForm> {
                   child: const Text('Login'),
                   onPressed: () {
                     if(formkey.currentState!.validate()){
-
+                      FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email:nameController.text,
+                          password: passwordController.text).then((value) => {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()
+                            )
+                            ).onError((error, stackTrace) => {
+                              print("Error${error.toString()}")
+                            })
+                          });
                     }else{
                       print("Error");
                     }
