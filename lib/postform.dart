@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'loginform.dart';
- 
-class SignUpFormWidget extends StatelessWidget {
-  const SignUpFormWidget({Key? key,}) : super(key: key);
+
+class PostForm extends StatelessWidget {
+  const PostForm({Key? key,}) : super(key: key);
   static const String _title = 'Food Wasteage Reduction';
 
 
@@ -15,53 +15,41 @@ class SignUpFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(_title)),
-      body: MySingin(),
+      body: Post(),
     );
   }
 }
-class MySingin extends StatefulWidget {
-  const MySingin({Key? key}) : super(key: key);
+class Post extends StatefulWidget {
+  const Post({Key? key}) : super(key: key);
 
   @override
-  State<MySingin> createState() => _MySinginState();
+  State<Post> createState() => _MySinginState();
 }
 
-class _MySinginState extends State<MySingin> {
+class _MySinginState extends State<Post> {
   TextEditingController name= TextEditingController();
   TextEditingController email=TextEditingController();
   TextEditingController number=TextEditingController();
-  TextEditingController password=TextEditingController();
-  TextEditingController conformpass=TextEditingController();
+  TextEditingController address =TextEditingController();
   GlobalKey <FormState>formkey= GlobalKey<FormState>();
 
 
   void  store(){
-     final sname=name.text.trim();
-     final semail=email.text;
-     final sphone=number.text;
-     final spassword=password.text;
-     final conpassword=conformpass.text;
-
-     FirebaseFirestore.instance.collection("store")
-         .add({
-       "name":sname,
-       "email":semail,
-       "phone":sphone,
-       "password":spassword,
-       "conformpass":conpassword
-     });
-     FirebaseAuth.instance.createUserWithEmailAndPassword(
-         email: semail,
-         password: spassword).then((value) =>{
-     Navigator.pop(context, MaterialPageRoute(builder: (context){
-     return const LoginForm() ;
-     }))
-     }).onError((error, stackTrace) => {
-       print("Error ${error.toString()}")
-     });
+    final sname=name.text.trim();
+    final semail=email.text;
+    final sphone=number.text;
+    final saddress=address.text;
 
 
+    FirebaseFirestore.instance.collection("store")
+        .add({
+      "name":sname,
+      "email":semail,
+      "phone":sphone,
+      "address":saddress,
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -73,7 +61,7 @@ class _MySinginState extends State<MySingin> {
             Container(
                 alignment: Alignment.center,
                 child: const Text(
-                  'Sign In',
+                  'Post',
                   style: TextStyle(fontSize: 40),
                 )
             ),
@@ -126,37 +114,20 @@ class _MySinginState extends State<MySingin> {
                     ),
                     SizedBox(height: 10,),
                     TextFormField(
-                      controller: password,
-                      obscureText: true,
+                      controller:address,
+                      maxLines: 3,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "Password"
+                          labelText: "Address"
                       ),
                       validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    SizedBox(height: 10,),
-                    TextFormField(
-                      controller: conformpass,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Conform Password"
-                      ),
-                      validator:
-                          (val){
-                        if(val!=password.text)
-                        {
-                          return"Not Match";
-                        }
-                      },
-
                     ),
                     SizedBox(height: 10,),
                     Container(
                         height: 50,
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: ElevatedButton(
-                          child: const Text('Create Account'),
+                          child: const Text('Post'),
                           onPressed: () {
                             if(formkey.currentState!.validate()){
                               store();
@@ -175,7 +146,7 @@ class _MySinginState extends State<MySingin> {
           ],
         ),
       ),
-      );
+    );
   }
 }
 

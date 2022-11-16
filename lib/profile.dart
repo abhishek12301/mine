@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatelessWidget {
   Widget textfield({@required hintText}) {
@@ -32,6 +33,14 @@ class ProfilePage extends StatelessWidget {
         automaticallyImplyLeading: false,
         elevation: 0.0,
         backgroundColor: Color(0xff555555),
+        leading: Builder(
+          builder: (BuildContext context){
+            return IconButton(onPressed:(){
+              FirebaseAuth.instance.signOut(
+              );
+            }, icon:Icon(Icons.logout));
+          },
+        ),
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -47,10 +56,10 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     textfield(
-                      hintText: 'Username',
+                      hintText: 'Ujwal m',
                     ),
                     textfield(
-                      hintText: 'Email',
+                      hintText: 'ujwal208@gmail.com',
                     ),
                     Container(
                       height: 55,
